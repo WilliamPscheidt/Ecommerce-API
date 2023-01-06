@@ -8,12 +8,16 @@ class ProductController extends DatabaseServer {
 
         const {product_name, description, price, adicional_content} = req.body;
 
-        await database.insert(Product, { 
-            product_name: product_name,
-            description: description,
-            price: price,
-            adicional_content: adicional_content
-        })
+        try {
+            await database.insert(Product, { 
+                product_name: product_name,
+                description: description,
+                price: price,
+                adicional_content: adicional_content
+            })
+        } catch (error) {
+            return res.send({error: error})
+        }
 
         res.send({
             success: "Product inserted"
@@ -23,16 +27,23 @@ class ProductController extends DatabaseServer {
     static async get(req, res) {
         const {product_name} = req.body;
 
-        res.send({
-            success: await database.find(Product, {product_name: product_name})
-        })
+        try{
+            res.send({success: await database.find(Product, {product_name: product_name})})
+        } catch (error) {
+            return res.send({error: error})
+        }
+
     }
 
     static async delete(req, res) {
         const {id} = req.body;
 
-        await database.delete(Product, {id: id})
-
+        try {
+            await database.delete(Product, {id: id})
+        } catch (error) {
+            return res.send({error: error})
+        }
+        
         res.send({
             success: "Product deleted"
         })
@@ -41,16 +52,20 @@ class ProductController extends DatabaseServer {
     static async update(req, res) {
         const {id, product_name, description, price, adicional_content} = req.body;
 
-        await database.update(Product, {id: id}, {
-            id: id,
-            product_name: product_name,
-            description: description,
-            price: price,
-            adicional_content: adicional_content
-        })
+        try {
+            await database.update(Product, {id: id}, {
+                id: id,
+                product_name: product_name,
+                description: description,
+                price: price,
+                adicional_content: adicional_content
+            })
+        } catch (error) {
+            return res.send({error: error})
+        }
 
         res.send({
-            ok: "Update"
+            success: "Product updated"
         })
     }
 }

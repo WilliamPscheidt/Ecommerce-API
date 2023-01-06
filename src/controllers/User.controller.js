@@ -5,8 +5,17 @@ const database = new DatabaseServer()
 
 class UserController {
     static async login(req, res) {
+        const {email, password} = req.body
+        
+        const userData = await database.find(User, {email: email})
 
-        res.send({"ok": "login"})
+        console.log(userData[0].password)
+
+        if(userData[0].password == password) {
+            return res.send({"success": "user logged in"})
+        }
+
+        res.send({"error": "invalid data provided"})
     }
 
     static async register(req, res) {

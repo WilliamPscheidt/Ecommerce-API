@@ -2,7 +2,7 @@ const HttpServer = require("../../adapters/http-server")
 const RateLimit = require("../security/rate-limit")
 const httpServer = new HttpServer()
 
-const ProductController = require("../../controllers/Product.js")
+const ProductController = require("../../controllers/Product.controller")
 
 class Router {
     static async initialize() {

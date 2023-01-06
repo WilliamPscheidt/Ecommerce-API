@@ -29,12 +29,26 @@ class ProductController extends DatabaseServer {
     }
 
     static async delete(req, res) {
+        const {id} = req.body;
+
+        await database.delete(Product, {id: id})
+
         res.send({
-            ok: "Delete route"
+            success: "Product deleted"
         })
     }
 
     static async update(req, res) {
+        const {id, product_name, description, price, adicional_content} = req.body;
+
+        await database.update(Product, {id: id}, {
+            id: id,
+            product_name: product_name,
+            description: description,
+            price: price,
+            adicional_content: adicional_content
+        })
+
         res.send({
             ok: "Update"
         })

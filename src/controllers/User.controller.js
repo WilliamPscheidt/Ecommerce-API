@@ -1,6 +1,8 @@
 const DatabaseServer = require("../adapters/database-server")
 const User = require('../models/Users.model')
 
+const Cryptography = require("../adapters/cryptography")
+
 const database = new DatabaseServer()
 
 class UserController {
@@ -27,7 +29,7 @@ class UserController {
                 name: name,
                 lastname: lastname,
                 email: email,
-                password: password,
+                password: await Cryptography.encrypt(password),
                 address: address,
                 zipcode: zipcode,
                 contact: contact, 

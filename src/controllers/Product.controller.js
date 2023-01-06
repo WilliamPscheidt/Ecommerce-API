@@ -3,7 +3,7 @@ const Product = require('../models/Products.model')
 
 const database = new DatabaseServer()
 
-class ProductController extends DatabaseServer {
+class ProductController {
     static async insert(req, res) {
 
         const {product_name, description, price, adicional_content} = req.body;

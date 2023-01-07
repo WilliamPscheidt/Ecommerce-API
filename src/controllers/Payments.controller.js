@@ -1,6 +1,12 @@
 const paypal = require('paypal-rest-sdk');
 
+const Product = require('../models/Products.model')
+
+const DatabaseServer = require("../adapters/database-server")
+const database = new DatabaseServer()
+
 const configurations = require("../../configurations.json")
+const Token = require("../adapters/token")
 
 paypal.configure({
     'mode': 'sandbox', //sandbox or live
@@ -12,7 +18,15 @@ class PaymentsController {
 
     static async paypalGenerateInvoice(req, res) {
 
-        const { product_id, price, product, description, currency, quantity, userToken } = req.body
+        const { product_id, currency, quantity, userToken } = req.body
+
+        if(!Token.verifyToken(userToken)) {
+            res.send({"error": "invalid token provided"})
+        }
+
+        const productInformations = await database.find(Product, {id: product_id})
+
+        console.log(productInformations)
 
         const create_payment_json = {
             "intent": "sale",
@@ -26,18 +40,18 @@ class PaymentsController {
             "transactions": [{
                 "item_list": {
                     "items": [{
-                        "name": product,
+                        "name": productInformations[0].product_name,
                         "sku": product_id,
-                        "price": price,
+                        "price": productInformations[0].price.replace(/,/g, "."),
                         "currency": currency,
                         "quantity": quantity
                     }]
                 },
                 "amount": {
                     "currency": currency,
-                    "total": price
+                    "total": productInformations[0].price.replace(/,/g, ".")
                 },
-                "description": description
+                "description": productInformations[0].description
             }]
         };
 

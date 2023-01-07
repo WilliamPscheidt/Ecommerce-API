@@ -1,5 +1,5 @@
 class UserValidations {
-    static validateLoginData(req, res, next) {
+    static login(req, res, next) {
 
         const {email, password} = req.body
 
@@ -16,7 +16,7 @@ class UserValidations {
         next()
     }
 
-    static validateRegisterData(req, res, next) {
+    static register(req, res, next) {
 
         const {name, lastname, email, password, address, zipcode, contact, document} = req.body;
 

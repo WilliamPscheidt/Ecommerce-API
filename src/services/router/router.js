@@ -26,9 +26,9 @@ class Router {
         httpServer.get("/payments/paypal/paypalPayment", PaymentsController.paypalPayment)
         httpServer.get("/payments/paypal/cancelPayment", PaymentsController.cancelPayment)
 
-        httpServer.get("/user/login", UserValidations.validateLoginData)
+        httpServer.get("/user/login", UserValidations.login)
         httpServer.get("/user/login", UserController.login)
-        httpServer.use("/user/register", UserValidations.validateRegisterData)
+        httpServer.post("/user/register", UserValidations.register)
         httpServer.post("/user/register", UserController.register)
 
         httpServer.start()

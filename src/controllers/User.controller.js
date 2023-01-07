@@ -36,7 +36,7 @@ class UserController {
                 document: document
             })
         } catch (error) {
-            return res.send({error: error})
+            return res.send({error: "error in request"})
         }
 
         res.send({"ok": "user registered"})

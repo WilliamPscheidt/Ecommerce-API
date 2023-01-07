@@ -16,7 +16,7 @@ class ProductController {
                 adicional_content: adicional_content
             })
         } catch (error) {
-            return res.send({error: error})
+            return res.send({error: "error in request"})
         }
 
         res.send({
@@ -30,7 +30,7 @@ class ProductController {
         try{
             res.send({success: await database.find(Product, {product_name: product_name})})
         } catch (error) {
-            return res.send({error: error})
+            return res.send({error: "error in request"})
         }
 
     }
@@ -41,7 +41,7 @@ class ProductController {
         try {
             await database.delete(Product, {id: id})
         } catch (error) {
-            return res.send({error: error})
+            return res.send({error: "error in request"})
         }
         
         res.send({
@@ -61,7 +61,7 @@ class ProductController {
                 adicional_content: adicional_content
             })
         } catch (error) {
-            return res.send({error: error})
+            return res.send({error: "error in request"})
         }
 
         res.send({

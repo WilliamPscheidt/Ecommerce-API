@@ -4,6 +4,7 @@ const httpServer = new HttpServer()
 
 const ProductController = require("../../controllers/Product.controller")
 const UserController = require("../../controllers/User.controller")
+const PaymentsController = require("../../controllers/Payments.controller")
 
 class Router {
     static async initialize() {
@@ -14,8 +15,10 @@ class Router {
         httpServer.put("/products", ProductController.update)
         httpServer.delete("/products", ProductController.delete)
 
-        httpServer.get("/user", UserController.login)
-        httpServer.post("/user", UserController.register)
+        httpServer.post("/payments/paypal/createOrder", PaymentsController.process_paypal)
+
+        httpServer.get("/user/login", UserController.login)
+        httpServer.post("/user/register", UserController.register)
 
         httpServer.start()
     }

@@ -6,12 +6,7 @@ class Cryptography {
     }
     
     static async compare(password, hash) {
-        return new Promise((resolve, reject) => {
-            if(bcrypt.compare(password, hash)){
-                resolve()
-            }
-            reject()
-        })
+        return bcrypt.compare(password, hash)
     }
 }
 

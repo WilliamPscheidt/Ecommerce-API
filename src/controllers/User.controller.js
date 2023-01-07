@@ -2,6 +2,7 @@ const DatabaseServer = require("../adapters/database-server")
 const User = require('../models/Users.model')
 
 const Cryptography = require("../adapters/cryptography")
+const Token = require("../adapters/token")
 
 const database = new DatabaseServer()
 
@@ -11,13 +12,11 @@ class UserController {
         
         const userData = await database.find(User, {email: email})
 
-        console.log(userData[0].password)
-
-        if(userData[0].password == password) {
-            return res.send({"success": "user logged in"})
+        if(await Cryptography.compare(password, userData[0].password)) {
+            return res.send({"success": "user logged in", "token": await Token.generateToken({email: email}, 3000)})
+        } else {
+            res.send({"error": "invalid data provided"})
         }
-
-        res.send({"error": "invalid data provided"})
     }
 
     static async register(req, res) {
@@ -39,7 +38,9 @@ class UserController {
             return res.send({error: "error in request"})
         }
 
-        res.send({"ok": "user registered"})
+        const userToken = await Token.generateToken({email: email}, 3000)
+
+        res.send({"success": "user registered", "token": userToken})
     }
 }
 

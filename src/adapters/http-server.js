@@ -3,6 +3,7 @@ const express = require('express')
 class HttpServer {
     constructor() {
         this.express = express()
+        this.express.disable('x-powered-by')
         this.middlewares()
     }
 

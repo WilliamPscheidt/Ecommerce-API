@@ -4,9 +4,7 @@ const uuid = require("uuid")
 const Payments = new mongoose.Schema({
     payment_id: {
         type: String,
-        default: uuid.v4,
-        reqired: true,
-        unique: true
+        reqired: true
     },
     product_name: {
         type: String,
@@ -20,8 +18,13 @@ const Payments = new mongoose.Schema({
         type: Object,
         required: true
     },
-    user_id: {
+    user_email: {
         type: String,
+        required: true
+    },
+    payment_status: {
+        type: String,
+        default: "Pending",
         required: true
     }
 })

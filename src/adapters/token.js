@@ -17,6 +17,10 @@ class Token {
             return false;
         }
     }
+
+    static async decodeToken(token) {
+        return await jwt.decode(token, configuration.token_key)
+    }
 }
 
 module.exports = Token

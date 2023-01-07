@@ -1,6 +1,7 @@
 const paypal = require('paypal-rest-sdk');
 
 const Product = require('../models/Products.model')
+const Payments = require('../models/Payments.model')
 
 const DatabaseServer = require("../adapters/database-server")
 const database = new DatabaseServer()
@@ -20,13 +21,11 @@ class PaymentsController {
 
         const { product_id, currency, quantity, userToken } = req.body
 
-        if(!Token.verifyToken(userToken)) {
-            res.send({"error": "invalid token provided"})
+        if (!Token.verifyToken(userToken)) {
+            res.send({ "error": "invalid token provided" })
         }
 
-        const productInformations = await database.find(Product, {id: product_id})
-
-        console.log(productInformations)
+        const productInformations = await database.find(Product, { id: product_id })
 
         const create_payment_json = {
             "intent": "sale",
@@ -55,10 +54,20 @@ class PaymentsController {
             }]
         };
 
-        paypal.payment.create(create_payment_json, function (error, payment) {
+        paypal.payment.create(create_payment_json, async function (error, payment) {
             if (error) {
-                return res.send({ error: error })
+                return res.send({ error: "Error in payment" })
             }
+            const tokenEmail = await Token.decodeToken(userToken)
+
+            await database.insert(Payments, {
+                payment_id: payment.id,
+                product_name: productInformations[0].product_name,
+                price: productInformations[0].price.replace(/,/g, "."),
+                product_id: product_id,
+                user_email: tokenEmail.email
+            })
+
             for (let i = 0; i < payment.links.length; i++) {
                 if (payment.links[i].rel === 'approval_url') {
                     res.status(201).json({
@@ -80,6 +89,8 @@ class PaymentsController {
             } else {
                 if (payment.state == 'approved') {
                     console.log('payment completed successfully');
+                    console.log(paymentId)
+                    console.log(payerId)
                     res.status(201).json({
                         status: 'success',
                         payment: payment,

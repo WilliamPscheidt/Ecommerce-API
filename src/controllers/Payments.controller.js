@@ -56,7 +56,7 @@ class PaymentsController {
 
         paypal.payment.create(create_payment_json, async function (error, payment) {
             if (error) {
-                return res.send({ error: "Error in payment" })
+                return res.send({ error: error })
             }
             const tokenEmail = await Token.decodeToken(userToken)
 

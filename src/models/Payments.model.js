@@ -6,6 +6,10 @@ const Payments = new mongoose.Schema({
         type: String,
         reqired: true
     },
+    payment_method: {
+        type: String,
+        required: true
+    },
     product_name: {
         type: String,
         required: true
@@ -26,6 +30,10 @@ const Payments = new mongoose.Schema({
         type: String,
         default: "Pending",
         required: true
+    },
+    payment: {
+        Type: Object,
+        required: false
     }
 })
 

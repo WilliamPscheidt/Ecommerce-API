@@ -62,6 +62,7 @@ class PaymentsController {
 
             await database.insert(Payments, {
                 payment_id: payment.id,
+                payment_method: "PayPal",
                 product_name: productInformations[0].product_name,
                 price: productInformations[0].price.replace(/,/g, "."),
                 product_id: product_id,
@@ -83,22 +84,21 @@ class PaymentsController {
         let paymentId = req.query.paymentId;
         let payerId = { payer_id: req.query.PayerID };
 
-        paypal.payment.execute(paymentId, payerId, function (error, payment) {
+        paypal.payment.execute(paymentId, payerId, async function (error, payment) {
             if (error) {
                 console.error(JSON.stringify(error));
             } else {
                 if (payment.state == 'approved') {
-                    console.log('payment completed successfully');
-                    console.log(paymentId)
-                    console.log(payerId)
+                    await database.update(Payments, {paymentId: paymentId}, {
+                        payment_status: "Aproved",
+                        payment: payment
+                    })
                     res.status(201).json({
-                        status: 'success',
-                        payment: payment,
+                        status: 'Payment Aproved',
                     });
                 } else {
                     res.status(400).json({
-                        status: 'payment not successful',
-                        payment: {},
+                        status: 'payment not successful'
                     });
                 }
             }

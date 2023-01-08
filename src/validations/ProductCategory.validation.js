@@ -17,6 +17,8 @@ class ProductCategoryValidation {
         if(!category_title) {
             return res.status(400).send({error: "please, provide the category title"})
         }
+
+        next()
     }
     
     static delete(req, res, next) {
@@ -25,6 +27,8 @@ class ProductCategoryValidation {
         if(!category_title) {
             return res.status(400).send({error: "please, provide the category title"})
         }
+
+        next()
     }
 
     static update(req, res, next) {

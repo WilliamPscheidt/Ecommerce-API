@@ -42,6 +42,7 @@ class Router {
         httpServer.get("/payments/paypal/paypalPayment", PaymentsController.paypalPayment)
 
         httpServer.get("/delivery/correios", DeliveryController.correiosCalculation)
+        httpServer.get("/delivery/correios/deliveryTracking", DeliveryController.deliveryTracking)
 
         httpServer.get("/user/login", UserValidations.login)
         httpServer.get("/user/login", UserController.login)

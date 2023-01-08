@@ -4,7 +4,7 @@ const forgeDeliveryRequest = require("./utils/ForgeDeliveryRequest")
 const DatabaseAdapter = require("../adapters/database-server")
 const database = new DatabaseAdapter()
 
-const ProductModel = require("../models/Products.model")
+const ProductModel = require("../models/Products.model");
 
 class DeliveryController {
 
@@ -37,6 +37,16 @@ class DeliveryController {
             console.error(error)
             return res.status(500).send({ error: "Error in delivery calculation" })
         }
+    }
+
+    static async deliveryTracking(req, res) {
+        const {deliveryCode} = req.body
+
+        const codes = [deliveryCode]
+
+        await correios.rastrearEncomendas(codes).then(response => {
+            return res.status(200).send({ response })
+        })
     }
 }
 

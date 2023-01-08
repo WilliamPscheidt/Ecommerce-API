@@ -6,7 +6,7 @@ const forgePaypalPayment = (product_name, product_id, price, currency, quantity,
         },
         "redirect_urls": {
             "return_url": "http://localhost:3000/payments/paypal/paypalPayment",
-            "cancel_url": "http://localhost:3000/payments/paypal/cancelPayment"
+            "cancel_url": "http://localhost:3000"
         },
         "transactions": [{
             "item_list": {

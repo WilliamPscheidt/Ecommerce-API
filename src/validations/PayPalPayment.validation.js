@@ -8,6 +8,10 @@ class PayPalPaymentValidation {
             return res.status(400).send({error: "please, provide all data"})
         }
 
+        if(!currency == "BRL" || !currency == "USD") {
+            return res.status(400).send({error: "please, provide a valid currecy"})
+        }
+
         next()
     }
 

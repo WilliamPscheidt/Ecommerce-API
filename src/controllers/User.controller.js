@@ -13,9 +13,9 @@ class UserController {
         const userData = await database.find(User, {email: email})
 
         if(await Cryptography.compare(password, userData[0].password)) {
-            return res.send({"success": "user logged in", "token": await Token.generateToken({email: email}, 3000)})
+            return res.status(200).send({"success": "user logged in", "token": await Token.generateToken({email: email}, 3000)})
         } else {
-            res.send({"error": "invalid data provided"})
+            res.status(400).send({"error": "invalid data provided"})
         }
     }
 
@@ -35,12 +35,12 @@ class UserController {
                 document: document
             })
         } catch (error) {
-            return res.send({error: "error in request"})
+            return res.status(400).send({error: "User already exists"})
         }
 
         const userToken = await Token.generateToken({email: email}, 3000)
 
-        res.send({"success": "user registered", "token": userToken})
+        res.status(201).send({"success": "user registered", "token": userToken})
     }
 }
 

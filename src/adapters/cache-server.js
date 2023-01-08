@@ -5,13 +5,13 @@ class CacheServer {
         this.client = createClient()
 
         this.client.on("error", (err) => {
-            console.log("Reddis ->", err)
+            console.log(err)
         })
 
         this.client.connect()
 
-        this.client.on("connect", (err) => {
-            console.log("Reddis ->", err)
+        this.client.on("connect", () => {
+            console.log("Reddis connected", )
         })
     }
 

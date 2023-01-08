@@ -16,10 +16,10 @@ class ProductController {
                 adicional_content: adicional_content
             })
         } catch (error) {
-            return res.send({error: "error in request"})
+            return res.status(400).send({error: "error in request"})
         }
 
-        res.send({
+        res.status(201).send({
             success: "Product inserted"
         })
     }
@@ -28,9 +28,9 @@ class ProductController {
         const {product_name} = req.body;
 
         try{
-            res.send({success: await database.find(Product, {product_name: product_name})})
+            res.status(202).send({success: await database.find(Product, {product_name: product_name})})
         } catch (error) {
-            return res.send({error: "error in request"})
+            return res.status(400).send({error: "error in request"})
         }
 
     }
@@ -41,10 +41,10 @@ class ProductController {
         try {
             await database.delete(Product, {id: id})
         } catch (error) {
-            return res.send({error: "error in request"})
+            return res.status(400).send({error: "error in request"})
         }
         
-        res.send({
+        res.status(200).send({
             success: "Product deleted"
         })
     }
@@ -61,10 +61,10 @@ class ProductController {
                 adicional_content: adicional_content
             })
         } catch (error) {
-            return res.send({error: "error in request"})
+            return res.status(400).send({error: "error in request"})
         }
 
-        res.send({
+        res.status(200).send({
             success: "Product updated"
         })
     }

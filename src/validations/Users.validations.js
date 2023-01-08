@@ -6,11 +6,11 @@ class UserValidations {
         const regexEmailValidation = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
         if (!email || !password) {
-            return res.send({error: "please, provide all data"})
+            return res.status(400).send({error: "please, provide all data"})
         }
 
         if (!email.match(regexEmailValidation)) {
-            return res.send({error: "invalid e-mail provided"})
+            return res.status(400).send({error: "invalid e-mail provided"})
         }
 
         next()
@@ -26,23 +26,23 @@ class UserValidations {
         const documentValidation = /^[0-9]{3}\.?[0-9]{3}\.?[0-9]{3}\-?[0-9]{2}$/
     
         if(!name || !lastname || !email || !password || !address || !zipcode || !contact || !document ) {
-            return res.send({error: "please, provide all data"})
+            return res.status(400).send({error: "please, provide all data"})
         }
 
         if (!email.match(regexEmailValidation)) {
-            return res.send({error: "invalid e-mail provided"})
+            return res.status(400).send({error: "invalid e-mail provided"})
         }
 
         if (!password.match(regexPasswordValidation)) {
-            return res.send({error: "your password must be more stronger"})
+            return res.status(400).send({error: "your password must be more stronger"})
         }
 
         if(!zipcode.match(zipcodeValidation)) {
-            return res.send({error: "please, provide a valid zipcode"})
+            return res.status(400).send({error: "please, provide a valid zipcode"})
         }
 
         if(!document.match(documentValidation)) {
-            return res.send({error: "please, provide a valid document"})
+            return res.status(400).send({error: "please, provide a valid document"})
         }
 
         next()

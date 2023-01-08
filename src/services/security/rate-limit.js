@@ -6,7 +6,7 @@ class RateLimit {
         const attempts = await cacheServer.get("rate-limit-system:"+req.socket.remoteAddress)
 
         if (attempts >= 5) {
-            return res.send({error: "rate-limit"})
+            return res.status(429).send({error: "rate-limit"})
         }
 
         await cacheServer.set("rate-limit-system:"+req.socket.remoteAddress, Number(attempts)+1, 50)

@@ -22,6 +22,10 @@ class CacheServer {
     async get(key) {
         return await this.client.get(key)
     }
+
+    async delete(key) {
+        return await this.client.del(key)
+    }
 }
 
 module.exports = CacheServer

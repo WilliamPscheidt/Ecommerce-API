@@ -11,6 +11,7 @@ const ProductCategoryController = require("../../controllers/ProductCategory.con
 const UserValidations = require("../../validations/Users.validations")
 const ProductsValidations = require("../../validations/Products.validations")
 const ProductCategoryValidation = require("../../validations/ProductCategory.validation")
+const PayPalPaymentValidation = require("../../validations/PayPalPayment.validation")
 
 const httpServer = new HttpServer()
 
@@ -37,7 +38,9 @@ class Router {
         httpServer.delete("/admin/category", ProductCategoryValidation.delete)
         httpServer.delete("/admin/category", ProductCategoryController.delete)
 
+        httpServer.post("/payments/paypal/createInvoice", PayPalPaymentValidation.paypalGenerateInvoice)
         httpServer.post("/payments/paypal/createInvoice", PaymentsController.paypalGenerateInvoice)
+        httpServer.get("/payments/paypal/paypalPayment", PayPalPaymentValidation.paypalPayment)
         httpServer.get("/payments/paypal/paypalPayment", PaymentsController.paypalPayment)
         httpServer.get("/payments/paypal/cancelPayment", PaymentsController.cancelPayment)
 

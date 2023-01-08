@@ -9,6 +9,8 @@ const database = new DatabaseServer()
 const configurations = require("../../configurations.json")
 const Token = require("../adapters/token")
 
+const forgePaypalPayment = require("./utils/ForgePaypalPayment")
+
 paypal.configure({
     'mode': 'sandbox', //sandbox or live
     'client_id': configurations.paypal_client,
@@ -27,32 +29,14 @@ class PaymentsController {
 
         const productInformations = await database.find(Product, { id: product_id })
 
-        const create_payment_json = {
-            "intent": "sale",
-            "payer": {
-                "payment_method": "paypal"
-            },
-            "redirect_urls": {
-                "return_url": "http://localhost:3000/payments/paypal/paypalPayment",
-                "cancel_url": "http://localhost:3000/payments/paypal/cancelPayment"
-            },
-            "transactions": [{
-                "item_list": {
-                    "items": [{
-                        "name": productInformations[0].product_name,
-                        "sku": product_id,
-                        "price": productInformations[0].price.replace(/,/g, "."),
-                        "currency": currency,
-                        "quantity": quantity
-                    }]
-                },
-                "amount": {
-                    "currency": currency,
-                    "total": productInformations[0].price.replace(/,/g, ".")
-                },
-                "description": productInformations[0].description
-            }]
-        };
+        if(productInformations.length === 0) {
+            return res.send({error: "Invalid product ID"})
+        }
+
+        const create_payment_json = forgePaypalPayment(
+            productInformations[0].product_name, product_id, productInformations[0].price.replace(/,/g, "."), currency, quantity, productInformations[0].description)
+
+        console.log(create_payment_json)
 
         paypal.payment.create(create_payment_json, async function (error, payment) {
             if (error) {
@@ -106,6 +90,10 @@ class PaymentsController {
     }
 
     static async cancelPayment(req, res) {
+        let paymentId = req.query.paymentId;
+
+        console.log(paymentId)
+        
         res.status(201).json({
             status: 'fail',
             msg: 'payment cancel',

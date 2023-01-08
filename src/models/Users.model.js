@@ -8,6 +8,11 @@ const UserSchema = new mongoose.Schema({
         reqired: true,
         unique: true
     },
+    access_level: {
+        type: String,
+        default: "User",
+        required: false,
+    },
     name: {
         type: String,
         required: true

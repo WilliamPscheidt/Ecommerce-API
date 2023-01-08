@@ -1,31 +1,44 @@
 const correios = require('correios-brasil');
-const configurations = require('../../configurations.json')
+const forgeDeliveryRequest = require("./utils/ForgeDeliveryRequest")
+
+const DatabaseAdapter = require("../adapters/database-server")
+const database = new DatabaseAdapter()
+
+const ProductModel = require("../models/Products.model")
 
 class DeliveryController {
-    
-    static async priceToDelivery(req, res) {
-        const {cep, product_id} = req.res
 
-        let args = {
-            sCepOrigem: configurations.originCep,
-            sCepDestino: cep,
-            nVlPeso: '1',
-            nCdFormato: '1',
-            nVlComprimento: '20',
-            nVlAltura: '20',
-            nVlLargura: '20',
-            nCdServico: ['04014', '04510'], //Array com os códigos de serviço
-            nVlDiametro: '0',
-          };
+    static async correiosCalculation(req, res) {
+        try {
+            const { cep, product_id } = req.body
 
-        await correios.consultarCep(cep).then((error, response) => {
-            if(response) {
-                correios.calcularPrecoPrazo
+            const productData = await database.find(ProductModel, { id: product_id })
+
+            if (productData.length === 0) {
+                return res.status(400).send({ error: "This product doesn't exists" })
             }
-            res.send({error: "Invalid CEP provided"})
-        })
-    }
 
+            const response = await correios.consultarCep(cep)
+            if (response) {
+                const args = await forgeDeliveryRequest(
+                    cep,
+                    productData[0].product_dimensions.weight,
+                    productData[0].product_dimensions.length,
+                    productData[0].product_dimensions.height,
+                    productData[0].product_dimensions.width
+                )
+
+                const deliveryResponse = await correios.calcularPrecoPrazo(args)
+                return res.send({ deliveryResponse })
+            }
+
+            return res.status(400).send({ error: "Invalid CEP provided" })
+        } catch (error) {
+            console.error(error)
+            return res.status(500).send({ error: "Error in delivery calculation" })
+        }
+    }
 }
+
 
 module.exports = DeliveryController

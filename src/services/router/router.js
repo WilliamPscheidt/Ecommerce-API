@@ -7,6 +7,7 @@ const ProductController = require("../../controllers/Product.controller")
 const UserController = require("../../controllers/User.controller")
 const PaymentsController = require("../../controllers/Payments.controller")
 const ProductCategoryController = require("../../controllers/ProductCategory.controller")
+const DeliveryController = require("../../controllers/Delivery.controller")
 
 const UserValidations = require("../../validations/Users.validations")
 const ProductsValidations = require("../../validations/Products.validations")
@@ -39,6 +40,8 @@ class Router {
 
         httpServer.post("/payments/paypal/createInvoice", PaymentsController.paypalGenerateInvoice)
         httpServer.get("/payments/paypal/paypalPayment", PaymentsController.paypalPayment)
+
+        httpServer.get("/delivery/correios", DeliveryController.correiosCalculation)
 
         httpServer.get("/user/login", UserValidations.login)
         httpServer.get("/user/login", UserController.login)

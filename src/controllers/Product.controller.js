@@ -8,8 +8,8 @@ const database = new DatabaseServer()
 class ProductController {
     static async insert(req, res) {
 
-        const {product_name, category, description, price, adicional_content} = req.body;
-
+        const {product_name, category, description, price, adicional_content, weight, length, height, width} = req.body;
+        
         const verify_category = await database.find(ProductCategoryModel, {category_title: category})
         const getProduct = await database.find(Product, {product_name: product_name})
 
@@ -27,6 +27,12 @@ class ProductController {
                 description: description,
                 category: category,
                 price: price,
+                product_dimensions: {
+                    weight: weight,
+                    length: length,
+                    height: height,
+                    width: width
+                },
                 adicional_content: adicional_content
             })
         } catch (error) {

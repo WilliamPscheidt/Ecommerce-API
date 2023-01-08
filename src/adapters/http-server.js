@@ -1,14 +1,15 @@
 const express = require('express')
+const helmet = require("helmet");
 
 class HttpServer {
     constructor() {
         this.express = express()
-        this.express.disable('x-powered-by')
         this.middlewares()
     }
 
     async middlewares() {
         this.express.use(express.json());
+        this.express.use(helmet());
     }
 
     async use(path, handler) {

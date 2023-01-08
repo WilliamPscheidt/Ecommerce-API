@@ -12,6 +12,14 @@ class UserController {
         
         const userData = await database.find(User, {email: email})
 
+        if(userData[0].access_level == "Admin") {
+            if(await Cryptography.compare(password, userData[0].password)) {
+                return res.status(200).send({"success": "user logged in", "token": await Token.generateAdminToken({email: email}, 3000), admin_mode: true})
+            } else {
+                res.status(400).send({"error": "invalid data provided"})
+            }
+        }
+
         if(await Cryptography.compare(password, userData[0].password)) {
             return res.status(200).send({"success": "user logged in", "token": await Token.generateToken({email: email}, 3000)})
         } else {

@@ -1,17 +1,26 @@
 const DatabaseServer = require("../adapters/database-server")
+
 const Product = require('../models/Products.model')
+const ProductCategoryModel = require('../models/ProductCategory.mode')
 
 const database = new DatabaseServer()
 
 class ProductController {
     static async insert(req, res) {
 
-        const {product_name, description, price, adicional_content} = req.body;
+        const {product_name, category, description, price, adicional_content} = req.body;
+
+        const verify_category = await database.find(ProductCategoryModel, {category_title: category})
+
+        if(verify_category.length === 0){
+            return res.status(400).send({error: "Please, enter a valid category name"})
+        }
 
         try {
             await database.insert(Product, { 
                 product_name: product_name,
                 description: description,
+                category: category,
                 price: price,
                 adicional_content: adicional_content
             })
@@ -50,13 +59,14 @@ class ProductController {
     }
 
     static async update(req, res) {
-        const {id, product_name, description, price, adicional_content} = req.body;
+        const {id, product_name, category, description, price, adicional_content} = req.body;
 
         try {
             await database.update(Product, {id: id}, {
                 id: id,
                 product_name: product_name,
                 description: description,
+                category: category,
                 price: price,
                 adicional_content: adicional_content
             })
